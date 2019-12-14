@@ -1,6 +1,7 @@
 import intera_interface
 import rospy
-import copy 
+import copy
+import math 
 
 from geometry_msgs.msg import Pose, Point, Quaternion
 
@@ -59,6 +60,16 @@ def move_to(pose, speed, to):
     g_limb.set_joint_position_speed(speed)
     g_limb.move_to_joint_positions(angle, timeout=to)
 
+def rotate(degrees):
+    #https://answers.ros.org/question/247808/tf-api-axesorder-of-rotation/
+    roll = degrees * (3.1415/180.0)
+    roll = 0
+    roll = -1.0*degrees * (3.1415/180.0)
+
+    q = Quaternion
+
+
+
 #Draws a square, from neutral pose
 def draw_square():
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
@@ -78,6 +89,7 @@ def draw_square():
     move_to(marker_pose, 0.3, 5)
     rospy.sleep(2.0)
     gripper.close()
+    rospy.sleep(2)
 
     marker_pose.position.z += 0.1
     move_to(marker_pose, 0.2, 5)
@@ -88,6 +100,10 @@ def draw_square():
     move_to(square_pose, 0.1, 2)
 
     square_pose.position.x += 0.1
+    move_to(square_pose, 0.075, 2)
+
+    # rotate
+
     move_to(square_pose, 0.075, 2)
 
     square_pose.position.y += 0.1
@@ -106,6 +122,40 @@ def draw_square():
     
     gripper.open()
 
+def draw_semi_circle():
+    global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
+    global marker_p, marker_q
+    global square_p, square_q
+
+    rospy.sleep(2)
+    gripper.open()
+
+    marker_pose = Pose()
+    marker_pose.position = marker_p
+    marker_pose.orientation = marker_q
+    circle_pose = Pose()
+    circle_pose.position = square_p
+    circle_pose.orientation = square_q
+
+    move_to(marker_pose, 0.3, 5)
+    rospy.sleep(2.0)
+    gripper.close()
+
+    marker_pose.position.z += 0.1
+    move_to(marker_pose, 0.2, 5)
+
+    move_to(circle_pose, 0.3, 5)
+
+    circle_pose.position.z = 0.00215987405556
+    move_to(circle_pose, 0.1, 2)
+
+    for_range = 16
+    mover = math.pi / for_range
+    movei = 0
+    for i in range(0, for_range):
+	    circle_pose.position.x += 0.025*(math.sin((math.pi*(i+1)) / for_range))
+	    circle_pose.position.y += 0.025*(math.cos((math.pi*(i+1))/ for_range))
+	    move_to(circle_pose, 0.075, 5)
 
 def main():
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
@@ -115,7 +165,11 @@ def main():
 
     # Move the arm to its neutral position, then draw square
     g_limb.move_to_neutral()
-    draw_square()
+    gripper.open()
+    # draw_square()
+    draw_semi_circle()
+    g_limb.move_to_neutral()
+    gripper.open()
 
 
 if __name__ == "__main__":
