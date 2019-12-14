@@ -1,9 +1,8 @@
-import math
 def draw_semi_circle():
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
     global marker_p, marker_q
     global square_p, square_q
-    
+
     rospy.sleep(2)
     gripper.open()
 
@@ -26,8 +25,10 @@ def draw_semi_circle():
     circle_pose.position.z = 0.00215987405556
     move_to(circle_pose, 0.1, 2)
 
-    for_range = 8
+    for_range = 16
+    mover = math.pi / for_range
+    movei = 0
     for i in range(0, for_range):
-	circle_pose.position.x += math.sin(i) / for_range
-	circle_pose.position.y += math.cos(i) / for_range
-	move_to(circle_pose, 0.1, 2)
+	    circle_pose.position.x += 0.025*(math.sin((math.pi*(i+1)) / for_range))
+	    circle_pose.position.y += 0.025*(math.cos((math.pi*(i+1))/ for_range))
+	    move_to(circle_pose, 0.075, 5)
