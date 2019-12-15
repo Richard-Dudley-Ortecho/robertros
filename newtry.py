@@ -9,6 +9,8 @@ g_limb = None
 g_orientation_hand_down = None
 g_position_neutral = None
 
+g_image_path = "FILL THIS TO BOBS PICTURE PATH"
+
 def init():
     global g_limb, g_orientation_hand_down, g_position_neutral, pos, posp, gripper
     global marker_p, marker_q
@@ -157,6 +159,11 @@ def draw_semi_circle():
 	    circle_pose.position.y += 0.025*(math.cos((math.pi*(i+1))/ for_range))
 	    move_to(circle_pose, 0.075, 5)
 
+def display_image():
+    global g_image_path
+    head_display = intera_interface.HeadDisplay()
+    head_display.display_image(g_image_path)
+
 def main():
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
     global marker_p, marker_q
@@ -164,10 +171,14 @@ def main():
     init()
 
     # Move the arm to its neutral position, then draw square
+
+    # display our lord and savior bob ross
+    display_image()
+    # Move the arm to its neutral position, then draw square
     g_limb.move_to_neutral()
     gripper.open()
-    # draw_square()
-    draw_semi_circle()
+    draw_square()
+    # draw_semi_circle()
     g_limb.move_to_neutral()
     gripper.open()
 
