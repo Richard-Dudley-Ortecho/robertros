@@ -9,13 +9,14 @@ g_limb = None
 g_orientation_hand_down = None
 g_position_neutral = None
 
-g_image_path = "FILL THIS TO BOBS PICTURE PATH"
+g_image_path = "/home/bobros3302/Desktop/bobros.jpg"
 
 def init():
     global g_limb, g_orientation_hand_down, g_position_neutral, pos, posp, gripper
     global marker_p, marker_q
     global square_p, square_q
-
+    global smile_p, smile_q
+    global eye_p, eye_q
     #Set up arm stuff
     rospy.init_node('cairo_sawyer_ik_example')
     g_limb = intera_interface.Limb('right')
@@ -54,6 +55,40 @@ def init():
     square_p.y = -0.152176453277
     square_p.z = 0.1125670410943
 
+    #Smiley Face position
+    smile_q = Quaternion()
+    smile_q.x = 0.704238785359
+    smile_q.y = 0.709956638597
+    smile_q.z = -0.00229009932359
+    smile_q.w = 0.00201493272073
+
+    smile_p = Point()
+    smile_p.x = 0.640436530776
+    smile_p.y = -0.225932733223
+    smile_p.z = 0.1125670410943
+    
+    #Smiley face eyes position
+    eye_q = Quaternion()
+    eye_q.x = 0.704238785359
+    eye_q.y = 0.709956638597
+    eye_q.z = -0.00229009932359
+    eye_q.w = 0.00201493272073
+
+    eye_p = Point()
+    eye_p.x = 0.522441281017
+    eye_p.y = -0.176425292767
+    eye_p.z = 0.1125670410943
+
+#eye 1 bottom
+# x: 0.603416187229
+
+#eye 2 bottom
+# y: -0.0541951494915
+
+#eye 2 top
+# x: 0.522441281017
+
+
 
 #Takes in POSE, SPEED, AND TIMEOUT, moves arm to that pose
 def move_to(pose, speed, to):
@@ -77,7 +112,8 @@ def draw_square():
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
     global marker_p, marker_q
     global square_p, square_q
-    
+    global smile_p, smile_q
+
     rospy.sleep(2)
     gripper.open()
 
@@ -151,13 +187,106 @@ def draw_semi_circle():
     circle_pose.position.z = 0.00215987405556
     move_to(circle_pose, 0.1, 2)
 
-    for_range = 16
+    for_range = 15
     mover = math.pi / for_range
     movei = 0
     for i in range(0, for_range):
-	    circle_pose.position.x += 0.025*(math.sin((math.pi*(i+1)) / for_range))
-	    circle_pose.position.y += 0.025*(math.cos((math.pi*(i+1))/ for_range))
+	    circle_pose.position.x += 0.025*(math.cos((math.pi*(i+1)) / for_range))
+	    circle_pose.position.y += 0.025*(math.sin((math.pi*(i+1))/ for_range))
 	    move_to(circle_pose, 0.075, 5)
+
+    move_to(marker_pose, 0.3, 5)
+    rospy.sleep(2.0)
+    gripper.open()
+    g_limb.move_to_neutral()
+
+
+def draw_smiley_face():
+    global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
+    global marker_p, marker_q
+    global square_p, square_q
+    global smile_p, smile_q
+    global eye_p, eye_q
+
+    rospy.sleep(2)
+    gripper.open()
+
+    marker_pose = Pose()
+    marker_pose.position = marker_p
+    marker_pose.orientation = marker_q
+    # circle_pose = Pose()
+    # circle_pose.position = square_p
+    # circle_pose.orientation = square_q
+
+    smile_pose = Pose()
+    smile_pose.position = smile_p
+    smile_pose.orientation = smile_q
+
+    eye_pose = Pose()
+    eye_pose.position = eye_p
+    eye_pose.orientation = eye_q
+
+    move_to(marker_pose, 0.3, 5)
+    rospy.sleep(2.0)
+    gripper.close()
+
+    marker_pose.position.z += 0.1
+    move_to(marker_pose, 0.2, 5)
+
+    move_to(smile_pose, 0.3, 5)
+
+    smile_pose.position.z = 0.00215987405556
+    move_to(smile_pose, 0.1, 2)
+
+    for_range = 15
+    mover = math.pi / for_range
+    movei = 0
+    for i in range(0, for_range):
+	    smile_pose.position.x += 0.025*(math.cos((math.pi*(i)) / for_range))
+	    smile_pose.position.y += 0.025*(math.sin((math.pi*(i))/ for_range))
+	    move_to(smile_pose, 0.075, 5)
+
+
+    move_to(eye_pose, 0.2, 5)
+    eye_pose.position.z = 0.00215987405556
+    move_to(eye_pose, 0.2, 5)
+
+
+    eye_pose.position.x += 0.1
+    move_to(eye_pose, 0.2, 5)
+    eye_pose.position.z += 0.1 
+    move_to(eye_pose, 0.2, 5)
+
+    eye_pose.position.x -= 0.1
+    # move_to(eye_pose, 0.2, 5)
+
+    eye_pose.position.y += 0.12
+    move_to(eye_pose, 0.2, 5)
+    eye_pose.position.z -= 0.1 
+    move_to(eye_pose, 0.2, 5)
+    eye_pose.position.x += 0.1
+    move_to(eye_pose, 0.2, 5)
+    eye_pose.position.z = 0.1125670410943
+    move_to(eye_pose, 0.2, 5)
+
+
+#-0.176425292767
+
+#eye 1 bottom
+# x: 0.603416187229
+
+#eye 2 bottom
+# y: -0.0541951494915
+
+#eye 2 top
+# x: 0.522441281017
+
+    move_to(marker_pose, 0.3, 5)
+    marker_pose.position.z -= 0.1
+    move_to(marker_pose, 0.2, 5)
+    rospy.sleep(2.0)
+    gripper.open()
+    g_limb.move_to_neutral()
 
 def display_image():
     global g_image_path
@@ -168,6 +297,7 @@ def main():
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
     global marker_p, marker_q
     global square_p, square_q
+    global smile_p, smile_q
     init()
 
     # Move the arm to its neutral position, then draw square
@@ -177,9 +307,10 @@ def main():
     # Move the arm to its neutral position, then draw square
     g_limb.move_to_neutral()
     gripper.open()
-    draw_square()
+    # draw_square()
     # draw_semi_circle()
-    g_limb.move_to_neutral()
+    draw_smiley_face()
+    # g_limb.move_to_neutral()
     gripper.open()
 
 
@@ -190,3 +321,4 @@ if __name__ == "__main__":
 #Information prints
 #rospy.loginfo("Old Hand Pose:\n %s" % str(g_limb._tip_states.states[0].pose))
 #rospy.loginfo("Old Joint Angles:\n %s" % str(g_limb.joint_angles()))
+
