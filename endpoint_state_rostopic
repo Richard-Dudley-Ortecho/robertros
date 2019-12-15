@@ -1,0 +1,1 @@
+rostopic echo /robot/limb/right/endpoint_state
