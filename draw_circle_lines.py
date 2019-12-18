@@ -1,4 +1,9 @@
 def draw_circle_lines():
+    #https://www.wikihow.com/Draw-a-Parabolic-Curve-(a-Curve-with-Straight-Lines)
+    # used this as a refernce for what to use as paramters to create an image like the
+    # example at the link.  Created the math to turn those parameters into directions and distances for
+    # the saywer arm to use.
+        
     global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
     global marker_p, marker_q
     global square_p, square_q
