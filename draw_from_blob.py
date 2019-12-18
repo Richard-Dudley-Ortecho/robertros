@@ -327,6 +327,7 @@ def draw_blob(l_vectors, fromZeroZero):
           cur_pose.position.y = fancy_pose.position.y + math.cos(l_vectors[i][0])*l_vectors[i][1]
           cur_pose.position.z = cur_pose.position.z
           move_to(cur_pose, 0.15, 5)
+        break
 
         
 
