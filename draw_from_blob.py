@@ -276,14 +276,14 @@ def calculatePath(l_coords, x_scale, y_scale):
     s_dist = math.sqrt(scaled_x**2 + scaled_y**2)
     direction = math.atan2(scaled_y,scaled_x)
     dirDist.append([direction,s_dist])
-    print(point)
     point = min_coords
     l_coords[index] = [0,0]
   return dirDist, inOrder
 
 def draw_blob(l_vectors, fromZeroZero):
   # start_p = [inorder[0], [from 00 to minY,minX]]
-    global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp, gripper
+    global g_limb, g_position_neutral, g_orientation_hand_down, pos, posp
+    global gripper
     global marker_p, marker_q
     global square_p, square_q
     
@@ -312,11 +312,11 @@ def draw_blob(l_vectors, fromZeroZero):
     cur_pose = Pose()
     cur_pose.orientation = fancy_pose.orientation
     cur_pose.position = fancy_pose.position
-
+    print("In draw blob")
     while (True):
         # calculate new position
-        cur_pose.position.x = fancy_pose.position.x + math.sin(fromZeroZero[0])*fromZeroZero[1][1]
-        cur_pose.position.y = fancy_pose.position.y + math.cos(fromZeroZero[0])*fromZeroZero[1][0]
+        cur_pose.position.x = fancy_pose.position.x + math.sin(fromZeroZero[0])*fromZeroZero[1]
+        cur_pose.position.y = fancy_pose.position.y + math.cos(fromZeroZero[0])*fromZeroZero[1]
         cur_pose.position.z = cur_pose.position.z
         # move to first pose
         move_to(cur_pose, 0.15, 5)
@@ -339,6 +339,12 @@ def move_to(pose, speed, to):
 
 def main():
   global img_height, img_width
+  global g_limb, g_orientation_hand_down, g_position_neutral, pos, posp, gripper
+  global g_limb_end
+  global marker_p, marker_q
+  global square_p, square_q
+  init()
+
   img = cv2.imread('./color-blobs.png')
   add_color_range_to_detect([200, 0, 0], [255, 0, 0])  # Detect blue  # Detect blue
   outline = []
@@ -382,16 +388,18 @@ def main():
   # calculate distnace to point / calculate angle
   # add to new list of vectors
   dirDist, inOrder = calculatePath(temp, x_dist_scale, y_dist_scale)
-  for i in range(0, len(inOrder)):
-    print(inOrder[i])
-  print("DIR DIST --------------------")
-  for i in range(0, len(inOrder)):
-    print(dirDist[i])
-  
-  direction = math.atan2((inOrder[0][1]-minY)/(inOrder[0][0]-minX))
-  distance = math.sqrt(((inOrder[0][1]-minY)*y_dist_scale)**2 + ((inOrder[0][0]-minX)*x_dist_scale)**2)
+  # for i in range(0, len(inOrder)):
+  #   print(inOrder[i])
+  # print("DIR DIST --------------------")
+  # for i in range(0, len(inOrder)):
+  #   print(dirDist[i])
+
+  direction = math.atan2((inOrder[0][0]-minY),(inOrder[0][1]-minX))
+  distance = math.sqrt(((inOrder[0][0]-minY)*y_dist_scale)**2 + ((inOrder[0][1]-minX)*x_dist_scale)**2)
+
   start_p = [direction, distance]
-  draw_blob(l_vectors, start_p)
+  print(start_p)
+  draw_blob(dirDist, start_p)
 
 
 
