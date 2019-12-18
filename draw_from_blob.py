@@ -1,5 +1,6 @@
 # take the blob and iterate through the entire array copy only
 # cells that has at least one neighbor that is 0.
+# takes from HOMEWORK 3 Base code
 
 import numpy as np  # You may have to "pip install numpy" to install this
 import cv2  # You may have to "pip install opencv-contrib-python" to install this
