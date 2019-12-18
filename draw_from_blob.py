@@ -1,6 +1,10 @@
 # take the blob and iterate through the entire array copy only
 # cells that has at least one neighbor that is 0.
-# takes from HOMEWORK 3 Base code
+# takes from HOMEWORK 3 Base code uses the blob detection code to find the blue image
+# in the homework 3 png.  saves the outline instead of the whole blob.  use the k means classifier
+# to pick "x" number of points to get a good outline.  pick a random starting point in the outline
+# array and calculate direction and distance to the nearest point and saves in order.  passes the array of
+# in order direction and distances back which we then use to give the sawayer arm new points to go to.
 
 import numpy as np  # You may have to "pip install numpy" to install this
 import cv2  # You may have to "pip install opencv-contrib-python" to install this
