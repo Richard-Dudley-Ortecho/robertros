@@ -13,7 +13,7 @@ from scipy.misc import toimage
 from scipy.misc import imsave
 from matplotlib import pyplot as plt
 from operator import itemgetter
-#import intera_interface
+import intera_interface
 import argparse
 import rospy
 import copy
